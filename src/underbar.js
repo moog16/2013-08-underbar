@@ -53,6 +53,32 @@ var _ = { };
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+    var iterations = [];
+    var len = collection.length;
+
+    if (Array.isArray(collection)) {
+
+      for(var i=0; i<len; i++) {  
+        iterator( collection[i], i, collection );
+      };
+    }
+    else {
+      function getKeys(collect) {
+        var keys = [];
+        for( var key in collect ) {
+          keys.push(key);
+        };
+        return keys;
+      };
+
+      var keys = getKeys(collection);
+      var len = keys.length;
+      for(var i=0; i< len; i++) {
+        iterator(collection[keys[i]], keys[i], collection);
+      };
+
+      return iterations;
+    };
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -61,6 +87,18 @@ var _ = { };
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
+    function each() {
+      var len = array.length;
+      var count = 0;
+      while(count < len) {
+        if (array[count] == target) {
+          return count;
+        };
+        count++;
+      };
+      return -1;
+    };
+    return each();
   };
 
   // Return all elements of an array that pass a truth test.
