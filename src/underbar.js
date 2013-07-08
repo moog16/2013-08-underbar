@@ -134,7 +134,6 @@ var _ = { };
         results.push(array[i]);
       };
     };
-    console.log(results);
     return results;
   };
 
@@ -144,6 +143,11 @@ var _ = { };
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var results = [];
+    for(var i=0; i<array.length; i++) {
+      results.push(iterator(array[i]));
+    };
+    return results;
   };
 
   /*
@@ -152,7 +156,7 @@ var _ = { };
    * as an example of this.
    */
 
-  // Takes an array of objects and returns and array of the values of
+  // Takes an array of objects and returns an array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
@@ -166,6 +170,12 @@ var _ = { };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
+    var results = [];
+    for(var i=0; i<list.length; i++) {
+      var newList = list[i].sort();
+      results.push(newList);
+    };
+    return results;
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -182,6 +192,14 @@ var _ = { };
   //   }, 0); // should be 6
   //
   _.reduce = function(collection, iterator, initialValue) {
+    var result = 0;
+    if(initialValue) {
+      result = initialValue;      
+    }
+    for(var i=0; i<collection.length; i++) {
+      result = iterator(result, collection[i]);
+    };
+    return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).
