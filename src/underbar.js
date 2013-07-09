@@ -202,6 +202,7 @@ var _ = { };
     return result;
   };
 
+  //expect(_.contains([1,2,3], 2)).to.equal(true);
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
@@ -218,6 +219,7 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, iterator, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
