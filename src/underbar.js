@@ -267,6 +267,26 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if(iterator == null) {
+      iterator = function(i) {return i; };
+    };
+
+    var newColl = [];
+    for(var i=0; i <collection.length; i++) {
+      if(collection[i].length > 0) {
+        newColl.push(false);
+      }
+      else if(collection[i].length == 0) {
+        newColl.push(false);
+      }
+      else {
+        newColl.push(!collection[i]);
+      };
+    };
+    console.log(newColl);
+    console.log(!_.every(newColl,iterator));
+
+    return !_.every(newColl, iterator);
   };
 
 
