@@ -191,18 +191,44 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   //
+
   _.reduce = function(collection, iterator, initialValue) {
-    var result = 0;
-    if(initialValue) {
-      result = initialValue;      
+    function getKeys(collect) {
+        var keys = [];
+        for( var key in collect ) {
+          keys.push(key);
+        };
+        return keys;
+    };
+
+    var result, startVal;
+
+    if(initialValue != null) {
+      result = initialValue; 
+      startVal = 0;
     }
-    for(var i=0; i<collection.length; i++) {
-      result = iterator(result, collection[i]);
+    else {
+      result = collection[0];  
+      startVal = 1;
+    };
+    if (!Array.isArray(collection)) {
+      var keys = getKeys(collection);
+      var len = keys.length;
+      while(startVal < len) {
+        result = iterator(result, collection[keys[startVal]]);
+        startVal++;
+      };
+    }
+    else {
+      while(startVal < collection.length) {
+        result = iterator(result, collection[startVal]);
+        startVal++;
+      };
     };
     return result;
   };
 
-  //expect(_.contains([1,2,3], 2)).to.equal(true);
+  //expect(_.contains({moe:1, larry:3, curly:9}, 3)).to.equal(true);
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
@@ -219,7 +245,22 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    return _.reduce(collection, iterator, true);
+    if (iterator == null) {
+      iterator = function(i) { return i; }; 
+    };
+    var truthTest = _.reduce(collection, function(result, item) {
+      return (result && iterator(item));
+    }, true);
+    if (truthTest == 1) {
+      return true;
+    }
+    else if(truthTest == 0 || truthTest == null) {
+      return false;
+    }
+    else {
+      return truthTest;
+    };
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
