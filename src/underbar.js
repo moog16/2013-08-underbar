@@ -355,16 +355,14 @@ var _ = { };
     for(var i=0; i<arguments.length; i++) {
       var keys = getKeys(arguments[i]);
       for(var j=0; j<keys.length; j++) {
-        //console.log(keys[j] in newHash);
         if(!(keys[j] in newHash)) {
-          //console.log('yes');
           newHash[keys[j]] = arguments[i][keys[j]];
         }
         //console.log(keys[j] + " : " + arguments[i][keys[j]]);
         //console.log(arguments[i][keys[j]]);
       };
     };
-    console.log(newHash);
+    //console.log(newHash);
     return newHash;
   };
 
@@ -406,6 +404,7 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    return func;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -415,6 +414,7 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout(func,wait,arguments[2],arguments[3],arguments[4]);
   };
 
 
@@ -425,6 +425,23 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
+    var allShuffled=false, newNum;
+    var shuffled = [];
+    while(!allShuffled) {
+      newNum = Math.floor(Math.random()*array.length);
+      //console.log(array.indexOf(newNum)/* + ", " newNum + "in array"*/);
+      //console.log(shuffled.indexOf(newNum)/* + ", " newNum + "in shuffled"*/);
+
+      if(array.indexOf(newNum) > -1 && shuffled.indexOf(newNum) == -1) {
+        shuffled.push(newNum);
+        console.log(newNum);
+      };
+      if(shuffled.length == array.length){
+        allShuffled = true;
+      };
+    };
+    console.log(shuffled);
+    return shuffled;
   };
 
 
