@@ -434,13 +434,11 @@ var _ = { };
 
       if(array.indexOf(newNum) > -1 && shuffled.indexOf(newNum) == -1) {
         shuffled.push(newNum);
-        console.log(newNum);
       };
       if(shuffled.length == array.length){
         allShuffled = true;
       };
     };
-    console.log(shuffled);
     return shuffled;
   };
 
@@ -456,6 +454,51 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var results = [];
+    var sortedResults = [];
+    var len = collection.length;
+    if(iterator === 'length') {
+      for(var i=0; i<len; i++) {
+        results.push(collection[i].length);
+      };
+      results = results.sort();
+      for(var i=0; i<len; i++) {
+        var added = false;
+        var count = 0;
+        while(!added) {
+          if(results[i] == collection[count].length) {
+            sortedResults.push(collection[count]);
+            collection.splice(count, 1);
+            added = true;
+          };
+          count++;
+        };
+      };
+    }
+    else {
+      var newColl = [];
+      //leave collection untouched
+      for(var i=0; i<collection.length; i++) {
+        newColl.push(collection[i]);
+      };
+      for(var i=0; i<len; i++) {
+          results.push(iterator(newColl[i]));
+      };
+      results.sort();
+
+      for(var i=0; i<len; i++) {
+        var count = 0;
+        while(count < len) {
+          if(results[i] == iterator(newColl[count])) {
+            sortedResults.push(newColl[count]);
+            newColl.splice(count, 1);
+            break;
+          };
+          count++;
+        };
+      };
+    };
+    return sortedResults;
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -464,23 +507,75 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var results = [], maxLen=0;
+    var len = arguments.length;
+    for(var i=0; i<len; i++){
+      if(arguments[i].length > maxLen) {
+        maxLen = arguments[i].length;
+      };
+    };
+    for(var i=0; i<maxLen; i++) {
+      var singleResult = [];
+      for(var j=0; j<len; j++) {
+        singleResult.push(arguments[j][i]);
+      };
+      results.push(singleResult);
+    };
+    return results;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  _.flatten = function(nestedArray, result, noLayers) {
+   /* var numLayers = function(arr, depth) {
+      for(var i=0; i<arr.length; i++) {
+        //console.log(i + ' has how many laters');    
+        if(Array.isArray(arr[i])) {
+          depth++;
+          console.log(depth);
+          numLayers(arr[i], depth);
+        };
+      };
+      return depth;
+    };
+    console.log(numLayers(nestedArray,1));*/
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var currentArray = arguments[0];
+    var results = [];
+
+    for(var i=1; i<arguments.length; i++) {
+      for(var j=0; j<currentArray.length; j++) {
+        for(var k=0; k<arguments[i].length; k++) {
+          if(currentArray[j] === arguments[i][k]) {
+            results.push(currentArray[j]);
+          };
+        };
+      };
+    };
+    return results;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var results = arguments[0];
+    
+    for(var i=1; i<arguments.length; i++) {
+      for(var j=0; j<results.length; j++) {
+        console.log(arguments[i] + " : " + results[j]);
+        if(!arguments[i].indexOf(results[j])) {
+          results.splice(j, 1);
+        };
+      };
+    };
+
+    return results;
   };
 
 
