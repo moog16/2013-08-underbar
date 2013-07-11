@@ -326,17 +326,14 @@ var _ = { };
         };
         return keys;
     };
-
-    var newHash = {};
-
     for(var i=0; i<arguments.length; i++) {
       var keys = getKeys(arguments[i]);
       for(var j=0; j<keys.length; j++) {
-        newHash[keys[j]] = arguments[i][keys[j]];
+        obj[keys[j]] = arguments[i][keys[j]];
       };
     };
 
-    return newHash;
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -350,20 +347,16 @@ var _ = { };
       return keys;
     };
 
-    var newHash = {};
-
-    for(var i=0; i<arguments.length; i++) {
+    for(var i=1; i<arguments.length; i++) {
       var keys = getKeys(arguments[i]);
       for(var j=0; j<keys.length; j++) {
-        if(!(keys[j] in newHash)) {
-          newHash[keys[j]] = arguments[i][keys[j]];
-        }
-        //console.log(keys[j] + " : " + arguments[i][keys[j]]);
-        //console.log(arguments[i][keys[j]]);
-      };
+        if(!(keys[j] in obj)){
+          obj[keys[j]] = arguments[i][keys[j]];
+        };
+      };      
     };
-    //console.log(newHash);
-    return newHash;
+    console.log(obj);
+    return obj;
   };
 
 
@@ -568,7 +561,6 @@ var _ = { };
     
     for(var i=1; i<arguments.length; i++) {
       for(var j=0; j<results.length; j++) {
-        console.log(arguments[i] + " : " + results[j]);
         if(!arguments[i].indexOf(results[j])) {
           results.splice(j, 1);
         };

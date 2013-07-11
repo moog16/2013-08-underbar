@@ -334,7 +334,7 @@ describe("defaults", function() {
   var result, options;
 
   beforeEach(function() {
-    options = {zero: 0, one: 1, empty: "hey", nan: NaN, string: "string"};
+    options = {zero: 0, one: 1, empty: "", nan: NaN, string: "string"};
     _.defaults(options, {zero: 1, one: 10, twenty: 20}, {empty: "full"}, {nan: "nan"}, {word: "word"}, {word: "dog"});
   });
 
