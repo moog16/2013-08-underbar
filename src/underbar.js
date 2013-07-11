@@ -268,25 +268,35 @@ var _ = { };
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     if(iterator == null) {
-      iterator = function(i) {return i; };
+      iterator = function(i) { return i; };
     };
 
-    var newColl = [];
-    for(var i=0; i <collection.length; i++) {
-      if(collection[i].length > 0) {
-        newColl.push(false);
-      }
-      else if(collection[i].length == 0) {
-        newColl.push(false);
-      }
-      else {
-        newColl.push(!collection[i]);
+
+    if(iterator(4) === true) {
+      for(var i=0; i<collection.length; i++) {
+        if(iterator(collection[i])) {
+          return true;
+        };
       };
+      return false; 
+    }
+    else {
+      var newColl = [];
+      for(var i=0; i <collection.length; i++) {
+        if(typeof collection[i] == "string") {
+          if(collection[i] == ''){
+            newColl.push(true);
+          }
+          else {
+            newColl.push(false);
+          };
+        }
+        else {
+          newColl.push(!collection[i]);
+        };
+      }; 
+      return !_.every(newColl, iterator);
     };
-    console.log(newColl);
-    console.log(!_.every(newColl,iterator));
-
-    return !_.every(newColl, iterator);
   };
 
 
@@ -309,11 +319,53 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    function getKeys(collect) {
+        var keys = [];
+        for( var key in collect ) {
+          keys.push(key);
+        };
+        return keys;
+    };
+
+    var newHash = {};
+
+    for(var i=0; i<arguments.length; i++) {
+      var keys = getKeys(arguments[i]);
+      for(var j=0; j<keys.length; j++) {
+        newHash[keys[j]] = arguments[i][keys[j]];
+      };
+    };
+
+    return newHash;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    function getKeys(collect) {
+      var keys = [];
+      for( var key in collect ) {
+        keys.push(key);
+      };
+      return keys;
+    };
+
+    var newHash = {};
+
+    for(var i=0; i<arguments.length; i++) {
+      var keys = getKeys(arguments[i]);
+      for(var j=0; j<keys.length; j++) {
+        //console.log(keys[j] in newHash);
+        if(!(keys[j] in newHash)) {
+          //console.log('yes');
+          newHash[keys[j]] = arguments[i][keys[j]];
+        }
+        //console.log(keys[j] + " : " + arguments[i][keys[j]]);
+        //console.log(arguments[i][keys[j]]);
+      };
+    };
+    console.log(newHash);
+    return newHash;
   };
 
 
