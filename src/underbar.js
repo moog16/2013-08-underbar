@@ -1,3 +1,4 @@
+
 /*jshint eqnull:true, expr:true*/
 
 var _ = { };
@@ -54,31 +55,18 @@ var _ = { };
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
     var iterations = [];
-    var len = collection.length;
 
     if (Array.isArray(collection)) {
-
-      for(var i=0; i<len; i++) {  
-        iterator( collection[i], i, collection );
-      };
+      for(var i=0; i<collection.length; i++) {  
+        iterator(collection[i], i, collection);
+      }
     }
     else {
-      function getKeys(collect) {
-        var keys = [];
-        for( var key in collect ) {
-          keys.push(key);
-        };
-        return keys;
-      };
-
-      var keys = getKeys(collection);
-      var len = keys.length;
-      for(var i=0; i< len; i++) {
-        iterator(collection[keys[i]], keys[i], collection);
-      };
-
-      return iterations;
-    };
+      var keys = Object.keys(collection);
+      for(var key in keys) {
+        iterator(collection[keys[key]], keys[key], collection);
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -193,14 +181,6 @@ var _ = { };
   //
 
   _.reduce = function(collection, iterator, initialValue) {
-    function getKeys(collect) {
-        var keys = [];
-        for( var key in collect ) {
-          keys.push(key);
-        };
-        return keys;
-    };
-
     var result, startVal;
 
     if(initialValue != null) {
@@ -212,7 +192,7 @@ var _ = { };
       startVal = 1;
     };
     if (!Array.isArray(collection)) {
-      var keys = getKeys(collection);
+      var keys = Object.keys(collection);
       var len = keys.length;
       while(startVal < len) {
         result = iterator(result, collection[keys[startVal]]);
@@ -319,15 +299,8 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    function getKeys(collect) {
-        var keys = [];
-        for( var key in collect ) {
-          keys.push(key);
-        };
-        return keys;
-    };
     for(var i=0; i<arguments.length; i++) {
-      var keys = getKeys(arguments[i]);
+      var keys = Object.keys(arguments[i]);
       for(var j=0; j<keys.length; j++) {
         obj[keys[j]] = arguments[i][keys[j]];
       };
@@ -339,23 +312,14 @@ var _ = { };
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    function getKeys(collect) {
-      var keys = [];
-      for( var key in collect ) {
-        keys.push(key);
-      };
-      return keys;
-    };
-
     for(var i=1; i<arguments.length; i++) {
-      var keys = getKeys(arguments[i]);
+      var keys = Object.keys(arguments[i]);
       for(var j=0; j<keys.length; j++) {
         if(!(keys[j] in obj)){
           obj[keys[j]] = arguments[i][keys[j]];
         };
       };      
     };
-    console.log(obj);
     return obj;
   };
 
