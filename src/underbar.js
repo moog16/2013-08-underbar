@@ -414,9 +414,7 @@ var _ = { };
       var count = 0;
       while(count < len) {
         if(iterator === 'length') {
-          console.log('length');
           if(results[i] === newColl[count].length) {
-            console.log('sort');
             sortedResults.push(newColl[count]);
             newColl.splice(count, 1);
             break;
