@@ -32,19 +32,19 @@ var _ = { };
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    var las = array.length;
-    if (n == null) {
-      return array[las-1];
+    var end = array.length;
+    if (n === undefined) {
+      return array[end-1];
     }
-    else if (n == 0){
+    else if (n === 0){
       return [];
     }
-    else if (n > las) {
+    else if (n > end) {
       return array;
     }
     else {
       var newArr = [];
-      for(var i=(n-1); i<las; i++) {
+      for(var i=(n-1); i<end; i++) {
         newArr.push(array[i]);
       };
       return newArr;
@@ -54,8 +54,6 @@ var _ = { };
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
-    var iterations = [];
-
     if (Array.isArray(collection)) {
       for(var i=0; i<collection.length; i++) {  
         iterator(collection[i], i, collection);
@@ -75,18 +73,14 @@ var _ = { };
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
-    function each() {
-      var len = array.length;
-      var count = 0;
-      while(count < len) {
-        if (array[count] == target) {
-          return count;
-        };
-        count++;
-      };
-      return -1;
-    };
-    return each();
+    var flag = -1, set = false;
+    _.each(array, function(value, index, collection) { 
+      if(value === target && set === false) {
+        flag = index;
+        set = true;
+      }
+    });
+    return flag;
   };
 
   // Return all elements of an array that pass a truth test.
@@ -191,6 +185,8 @@ var _ = { };
       result = collection[0];  
       startVal = 1;
     };
+
+    //contains wants us to use reduce --> contains tests for objects
     if (!Array.isArray(collection)) {
       var keys = Object.keys(collection);
       var len = keys.length;
@@ -249,34 +245,20 @@ var _ = { };
     // TIP: There's a very clever way to re-use every() here.
     if(iterator == null) {
       iterator = function(i) { return i; };
-    };
-
-
-    if(iterator(4) === true) {
-      for(var i=0; i<collection.length; i++) {
-        if(iterator(collection[i])) {
-          return true;
-        };
-      };
-      return false; 
     }
-    else {
-      var newColl = [];
-      for(var i=0; i <collection.length; i++) {
-        if(typeof collection[i] == "string") {
-          if(collection[i] == ''){
-            newColl.push(true);
-          }
-          else {
-            newColl.push(false);
-          };
-        }
-        else {
-          newColl.push(!collection[i]);
-        };
-      }; 
-      return !_.every(newColl, iterator);
-    };
+    var flag = false;
+
+    for(var element in collection) {
+      if(iterator(collection[element]) === true) {
+        flag = true;
+      }
+    }
+
+    for(var element in collection) {
+      collection[element] = !collection[element];
+    }
+
+    return flag || !_.every(collection, iterator);
   };
 
 
@@ -411,50 +393,43 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-    var results = [];
-    var sortedResults = [];
+    var results = [],
+    sortedResults = [],
+    newColl = [];
     var len = collection.length;
-    if(iterator === 'length') {
-      for(var i=0; i<len; i++) {
-        results.push(collection[i].length);
-      };
-      results = results.sort();
-      for(var i=0; i<len; i++) {
-        var added = false;
-        var count = 0;
-        while(!added) {
-          if(results[i] == collection[count].length) {
-            sortedResults.push(collection[count]);
-            collection.splice(count, 1);
-            added = true;
-          };
-          count++;
-        };
-      };
-    }
-    else {
-      var newColl = [];
-      //leave collection untouched
-      for(var i=0; i<collection.length; i++) {
-        newColl.push(collection[i]);
-      };
-      for(var i=0; i<len; i++) {
-          results.push(iterator(newColl[i]));
-      };
-      results.sort();
 
-      for(var i=0; i<len; i++) {
-        var count = 0;
-        while(count < len) {
-          if(results[i] == iterator(newColl[count])) {
+    //leave collection untouched, Spec doesn't like that
+    for(var index in collection) {
+      if(iterator === 'length') {
+        results.push(collection[index].length);   
+      }
+      else {
+        results.push(iterator(collection[index]));
+      }
+      newColl.push(collection[index]);
+    }
+    results.sort();
+
+    for(var i=0; i<len; i++) {
+      var count = 0;
+      while(count < len) {
+        if(iterator === 'length') {
+          console.log('length');
+          if(results[i] === newColl[count].length) {
+            console.log('sort');
             sortedResults.push(newColl[count]);
             newColl.splice(count, 1);
             break;
-          };
-          count++;
-        };
-      };
-    };
+          }
+        }
+        else if(results[i] === iterator(newColl[count])) {
+          sortedResults.push(newColl[count]);
+          newColl.splice(count, 1);
+          break;
+        }
+        count++;
+      }
+    }
     return sortedResults;
   };
 
