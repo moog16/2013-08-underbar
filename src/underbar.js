@@ -343,7 +343,22 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    return func;
+    var results = {};
+
+    var args = JSON.stringify(arguments);
+
+    var memo = function(fun) {
+      if(results[args]) {
+        return results[args];
+      }
+      else {
+        var answer = fun.apply(null, arguments);
+        results[args] = answer;
+        return answer;
+      }
+    };
+
+    return memo(func);
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -458,19 +473,10 @@ var _ = { };
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result, noLayers) {
-   /* var numLayers = function(arr, depth) {
-      for(var i=0; i<arr.length; i++) {
-        //console.log(i + ' has how many laters');    
-        if(Array.isArray(arr[i])) {
-          depth++;
-          console.log(depth);
-          numLayers(arr[i], depth);
-        };
-      };
-      return depth;
-    };
-    console.log(numLayers(nestedArray,1));*/
+  _.flatten = function(nestedArray, result) {
+    result = ""+nestedArray;
+    result = result.split(",");
+    return result;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
